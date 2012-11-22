@@ -9,6 +9,8 @@ begin
 		raise "Path #{path} does not exist.\n"
 	elsif(!File.exists?(File.join(path, 'config.json')))
 		raise "config.json file does not exist in #{path}"
+	elsif(!File.exists?(File.join(path, 'bot.rb')))
+		raise "bot.rb file does not exist in #{path}"
 	end
 rescue 
 	print $!.to_s + "\n\n"

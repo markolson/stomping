@@ -19,6 +19,8 @@ Or install it yourself as:
 ## Usage
 
 Haha man I dunno yet!
+Add a bot: stomping add [path]
+List bots: stomping list
 
 ## Contributing
 
