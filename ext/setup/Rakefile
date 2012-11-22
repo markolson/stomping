@@ -1,0 +1,6 @@
+task :default do
+  `mkdir -p ~/.stomping/bots`
+end
+
+task :extension => [:default] do
+end

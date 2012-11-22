@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+require 'stomping'
+
+if ["list", "add"].include?(ARGV.first)
+	require "stomping/manager/#{ARGV.first}.rb"
+else
+	require 'stomping/manager/run.rb'
+end

@@ -1,0 +1,10 @@
+Stomping should act sort of like God and manage bots that are written
+to use the library.
+
+stomping add /path/to/bot/config.json
+
+Or have a ~/.stomping/config.json file with a key for searchpaths in it.
+Have a ~/.stomping/bots path with symlinks to the config files for each bot, 
+instead of storing that info in a database.
+
+When run, it initializes an instance of each bot, which itself can have multiple responders (timed, random, response, etc..) and execute them. We keep a centralized datastore of each bot's status - how many API requests it has left, if one user is hogging all the reponses, etc, etc, and pass back error codes to the bots as needed.
