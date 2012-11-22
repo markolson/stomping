@@ -4,7 +4,7 @@ module Stomping::Actions
 		def initialize(klass, timer, &block)
 			@timer = timer
 			@owner = klass
-			block.call("hi")
+			block.call("hi") if block_given?
 		end
 
 		def to_s
