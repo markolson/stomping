@@ -21,4 +21,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sequel'
   gem.add_dependency 'json'
   gem.add_dependency 'parse-cron'
+  gem.add_dependency 'oauth'
 end

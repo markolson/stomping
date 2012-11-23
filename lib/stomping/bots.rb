@@ -3,13 +3,13 @@ module Stomping
     require 'pathname'
   	attr_accessor :bots
 
-  	def bots
+  	def bots(live=true)
   		@bots ||= []
-  		reload! if @bots.empty?
+  		reload!(live) if @bots.empty?
   		@bots
   	end
 
-  	def reload!
+  	def reload!(live=true)
   		#Stomping.debug("Reloading bot configs")
   		@bots = []
   		bot_path = File.join(Stomping.bot_path, "*")
@@ -22,7 +22,8 @@ module Stomping
             raise NameError, "#{class_name.inspect} Does not exist in bot '#{bot_config['name']}'"
           end
           klass = Object.module_eval("::#{$1}", __FILE__, __LINE__)
-          @bots << klass.new(bot_config)
+          auth = live ? JSON.load(File.read(File.join(root_bot_path, 'auth.json'))) : nil
+          @bots << klass.new(bot_config, auth)
         }
 		  }
   	end

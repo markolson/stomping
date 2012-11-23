@@ -8,3 +8,5 @@ Have a ~/.stomping/bots path with symlinks to the config files for each bot,
 instead of storing that info in a database.
 
 When run, it initializes an instance of each bot, which itself can have multiple responders (timed, random, response, etc..) and execute them. We keep a centralized datastore of each bot's status - how many API requests it has left, if one user is hogging all the reponses, etc, etc, and pass back error codes to the bots as needed.
+
+Make a Class for the bot, and move 'bot' to like, ... something else. We should only have 1 twitter oauth client per registered bot, not one for each actor.

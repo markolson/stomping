@@ -8,7 +8,7 @@ module Stomping::Actions
 		end
 
 		def to_s
-			"Scheduled Bot for #{@owner.name}. Next run at #{@timer.next}"
+			"Scheduled Bot for #{@owner.settings.title}. Next run at #{@timer.next}"
 		end
 	end
 end

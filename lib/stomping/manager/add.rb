@@ -25,8 +25,39 @@ bot_path = File.join(Stomping.bot_path, config['name'].gsub(/[^0-9a-z]/i, ''))
 begin
 	File.symlink(config_path, bot_path)
 rescue Errno::EEXIST
-
 end
-print "Added bot '#{config['name']}'\n"
 
-#oauth register if the config isn't right.
+oauth_path = File.join(path, 'auth.json')
+auth = {}
+# what horrible login. the file exists? well ok then!
+# but this is just me for a while, so it's ok!
+if(!File.exists?(oauth_path))
+	puts "************************************"
+	puts "You do not have an oauth.json file."
+	puts "Go to http://dev.twitter.com and "
+	puts "Create a new Application."
+	puts "************************************"
+
+	print "Once you have done that, paste in the 'Consumer key' here > "
+	auth['CONSUMER_KEY'] =  STDIN.readline.chomp
+	print "Paste in the 'Consumer secret' here > "
+	auth['CONSUMER_SECRET'] = STDIN.readline.chomp
+
+	oauth = OAuth::Consumer.new(auth['CONSUMER_KEY'], auth['CONSUMER_SECRET'], :site => 'https://api.twitter.com')
+	token = oauth.get_request_token
+
+	puts "Now, go to this url and enter the PIN provided. "
+	puts token.authorize_url.strip + " > "
+	pin = STDIN.readline.chomp
+
+	pinned_token = token.get_access_token(:oauth_verifier => pin.chomp)
+	p pinned_token
+	auth['ACCESS_KEY'] = pinned_token.token
+	auth['ACCESS_SECRET'] = pinned_token.secret
+	File.open(oauth_path, 'w') { |f| f.write(auth.to_json) }
+else
+	auth = JSON.load(File.read(oauth_path))
+end
+
+p auth
+puts "Added bot '#{config['name']}'"
