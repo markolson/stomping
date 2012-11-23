@@ -15,8 +15,13 @@ require "stomping/version"
 
 module Stomping
 	class << self
-		attr_accessor :config_path, :bot_path
+		attr_accessor :config_path, :bot_path, :rates
 	end
+
+	self.rates = {
+		:mentions => 15,
+		:search => 150
+	}
 	
 	self.config_path = File.expand_path('~/.stomping')
 	self.bot_path = File.join(self.config_path, "bots")

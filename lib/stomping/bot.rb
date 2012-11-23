@@ -4,7 +4,6 @@ require_relative "twitter"
 class Stomping::Bot
     extend Stomping::Actions
     extend Stomping::ThankYouSinatra
-    include Stomping::Twitter
 
     attr_accessor :client
 
@@ -12,12 +11,13 @@ class Stomping::Bot
 		settings.set(:title, config['name']) unless settings.respond_to? :title
 		settings.set(:description, config['description']) unless settings.respond_to? :description
 		callback.call("hey") if callback
-		self.class.client = twitter_client(auth) if auth
+		self.class.client = auth
     end
 
     def settings; self.class.settings; end
     def actions; self.class.actions; end
     def callback; self.class.trigger; end
+    def client; self.class.client; end
 
     class << self
     	attr_accessor :actions, :trigger, :client
