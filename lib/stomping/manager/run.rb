@@ -15,7 +15,7 @@ module Twitter
 end
 
 Stomping.bots.each {|bot|
-	p bot.client.limits
+	
 	exit
 	begin
 		p bot.client.mentions

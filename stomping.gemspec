@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'twitter', '~> 4.2'
   gem.add_dependency 'sequel'
+  gem.add_dependency 'sqlite3'
   gem.add_dependency 'json'
   gem.add_dependency 'parse-cron'
   gem.add_dependency 'oauth'

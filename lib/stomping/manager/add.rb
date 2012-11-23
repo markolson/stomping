@@ -27,6 +27,12 @@ begin
 rescue Errno::EEXIST
 end
 
+saved_bot =  Stomping::DB::Client.find(:path => path)
+if not saved_bot
+	#accept robot jesus?
+	saved_bot = Stomping::DB::Client.create(:name => config[:name], :path => path)
+end
+
 oauth_path = File.join(path, 'auth.json')
 auth = {}
 # what horrible login. the file exists? well ok then!
@@ -51,7 +57,6 @@ if(!File.exists?(oauth_path))
 	pin = STDIN.readline.chomp
 
 	pinned_token = token.get_access_token(:oauth_verifier => pin.chomp)
-	p pinned_token
 	auth['ACCESS_KEY'] = pinned_token.token
 	auth['ACCESS_SECRET'] = pinned_token.secret
 	File.open(oauth_path, 'w') { |f| f.write(auth.to_json) }
@@ -59,5 +64,9 @@ else
 	auth = JSON.load(File.read(oauth_path))
 end
 
-p auth
+saved_bot.access_key = auth['ACCESS_KEY']
+saved_bot.access_secret = auth['ACCESS_SECRET']
+saved_bot.consumer_key = auth['CONSUMER_KEY']
+saved_bot.consumer_secret = auth['CONSUMER_SECRET']
+saved_bot.save
 puts "Added bot '#{config['name']}'"
