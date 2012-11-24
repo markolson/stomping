@@ -69,4 +69,9 @@ saved_bot.access_secret = auth['ACCESS_SECRET']
 saved_bot.consumer_key = auth['CONSUMER_KEY']
 saved_bot.consumer_secret = auth['CONSUMER_SECRET']
 saved_bot.save
+
+Stomping::Bot.from_directory(path, false).each {|x|
+	Stomping::DB::Bot.find_or_create(:client_id => saved_bot.id, :name => x.settings.title)
+}
+
 puts "Added bot '#{config['name']}'"

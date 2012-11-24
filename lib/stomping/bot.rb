@@ -22,6 +22,24 @@ class Stomping::Bot
     class << self
     	attr_accessor :actions, :trigger, :client
 
+    	def from_directory(root_bot_path, live=false)
+    		@bots = []
+    		bot_config = JSON.load(File.read(File.join(root_bot_path, "config.json")))
+	        require File.join(root_bot_path, "bot.rb")
+	        if live
+	          auth = twitter_client(JSON.load(File.read(File.join(root_bot_path, 'auth.json'))))
+	        end
+	        
+	        bot_config['runners'].each { |r|
+	          unless /\A(?:::)?([A-Z]\w*(?:::[A-Z]\w*)*)\z/ =~ r
+	            raise NameError, "#{class_name.inspect} Does not exist in bot '#{bot_config['name']}'"
+	          end
+	          klass = Object.module_eval("::#{$1}", __FILE__, __LINE__)
+	          @bots << klass.new(bot_config, auth)
+	        }
+	        return @bots
+    	end
+
     	def add_action(action)
     		@actions ||= []
     		@actions << action
