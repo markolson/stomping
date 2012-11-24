@@ -16,14 +16,18 @@ require "stomping/twitter"
 require "stomping/version"
 
 module Stomping
+
 	class << self
-		attr_accessor :config_path, :bot_path, :rates, :db
+		attr_accessor :config_path, :bot_path, :db
+		attr_accessor :last_rate_reset, :rates
 	end
 
 	self.rates = {
-		:mentions => 15,
-		:search => 150
+		'mentions' => 15,
+		'search' => 150
 	}
+
+	self.last_rate_reset = nil
 	
 	self.config_path = File.expand_path('~/.stomping')
 	self.db = Stomping::DB.new("#{self.config_path}/bots.db")

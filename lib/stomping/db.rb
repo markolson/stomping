@@ -4,6 +4,8 @@ module Stomping
 		def initialize(path)
 			@handle =  Sequel.connect("sqlite://#{path}")
 			Sequel::Model.db = @handle
+			Sequel.datetime_class = DateTime
+			Sequel.default_timezone = :utc
 			if !File.exists?(path)
 				setup
 			end
@@ -38,6 +40,13 @@ module Stomping
 				BigDecimal	:replied_to
 				BigDecimal 	:replied_user
 				BigDecimal	:tweet_replied_to
+			end
+
+			@handle.create_table(:requests) do
+				primary_key :id
+				foreign_key :client_id, :clients
+				DateTime	:requested_at
+				String		:type
 			end
 		end
 	end

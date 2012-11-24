@@ -12,12 +12,12 @@ class Stomping::Bot
 		settings.set(:description, config['description']) unless settings.respond_to? :description
 		callback.call("hey") if callback
 		self.class.client = auth
+		self.class.mentions ||= []
     end
 
     def run
     	actions.each {|x|
     		if x.should_run?(Time.now-1)
-    			p "running #{x}"
     			x.run
     		end	
     	}
@@ -38,14 +38,13 @@ class Stomping::Bot
 	    end
 
 	    def get_mentions
-	    	p last_updated
-	    	p "Getting Mentions"
-	    	update!
-	    	@mentions = client.mentions_timeline
-	     	p @mentions.select {|tweet|
-	     		tweet.created_at > (last_updated - (60*60*24*2))
-	    	}
-	    	p last_updated
+	    	request('mentions') do
+	    		@mentions = client.mentions_timeline
+	    		@mentions.select {|tweet|
+	     			last_updated.nil? || DateTime.parse(tweet.created_at.to_s)  > last_updated - 60*60*24
+	    		}.map {|t| p t['text'] }
+	    		update!
+	    	end
 	    end
 
     	def from_directory(root_bot_path, live=false)
@@ -65,7 +64,6 @@ class Stomping::Bot
 	          if live
 	          	c = Stomping::DB::Client.find(:path => root_bot_path.to_s)
 	          	obj.class.model = Stomping::DB::Bot.where(:client => c).where(:name => obj.settings.title).first
-	          	p obj.class.model
 	          end
 	          @bots << obj
 	        }
@@ -78,6 +76,7 @@ class Stomping::Bot
     	end
 
     	def update!
+    		"UPDATING LAST RUN TIME TO #{Time.now}"
     		model.update(:last_updated => Time.now).save
     	end
 
