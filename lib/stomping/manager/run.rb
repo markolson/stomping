@@ -15,11 +15,5 @@ module Twitter
 end
 
 Stomping.bots.each {|bot|
-	
-	exit
-	begin
-		p bot.client.mentions
-	rescue 
-		p $!.rate_limit.reset_in
-	end
+	bot.run
 }

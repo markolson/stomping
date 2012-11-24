@@ -9,5 +9,13 @@ module Stomping::Actions
 		def to_s
 			"Replier Bot for #{@owner.settings.title}."
 		end
+
+		def should_run?(last_run)
+			true
+		end
+
+		def run
+			@owner.new_mentions
+		end
 	end
 end
