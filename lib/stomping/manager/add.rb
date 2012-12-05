@@ -1,7 +1,7 @@
 path = ARGV[1]
 
 require 'digest/sha1'
-
+path = File.expand_path(path)
 begin
 	if(path.nil?)
 		raise "You must specify a path"

@@ -41,13 +41,13 @@ class Stomping::Bot
 
 	    def get_mentions
 	    	request('mentions') do
-	    		@mentions = client.mentions_timeline
-                update!
-	    		m = @mentions.select {|tweet|
-	     			last_updated.nil? || DateTime.parse(tweet.created_at.to_s)  > last_updated
+            @mentions = client.mentions_timeline
+                @mentions.select {|tweet|
+                   last_updated.nil? || DateTime.parse(tweet.created_at.to_s)  > last_updated
 	    		}.each {|t|
                     self.run_action(t)
                 }
+                update!
 	    	end
 	    end
 

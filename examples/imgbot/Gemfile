@@ -1,0 +1,7 @@
+source :rubygems
+
+gem 'stomping', :path => '~/Code/stomping'
+gem 'sequel'
+gem 'sqlite3'
+
+gem 'google_image_api'

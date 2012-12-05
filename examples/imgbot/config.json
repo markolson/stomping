@@ -1,0 +1,5 @@
+{
+	"name": "ImgBot",
+	"description": "Developed for @AnImageReply",
+	"runners": ["ImgBot::Replier"]
+}
