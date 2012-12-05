@@ -2,7 +2,7 @@ require "rubygems"
 require "bundler/setup"
 
 require 'json'
-require 'cron_parser'
+require 'parse-cron'
 require 'oauth'
 require 'twitter'
 require 'sequel'

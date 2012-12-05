@@ -10,8 +10,9 @@ module Stomping::Actions
 			"Replier Bot for #{@owner.settings.title}."
 		end
 
-		def should_run?(last_run)
-			true
+		def should_run?(last_run, options = {})
+			return true
+			return (Time.now - Time.parse(last_run.to_s) >= 60)
 		end
 
 		def run

@@ -29,6 +29,7 @@ module Stomping
 				primary_key :id
 				foreign_key :client_id, :clients
 				DateTime 	:last_updated
+				DateTime 	:last_ran
 				String 		:name
 			end
 

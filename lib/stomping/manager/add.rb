@@ -62,6 +62,19 @@ if(!File.exists?(oauth_path))
 	File.open(oauth_path, 'w') { |f| f.write(auth.to_json) }
 else
 	auth = JSON.load(File.read(oauth_path))
+	unless auth['ACCESS_KEY']
+		oauth = OAuth::Consumer.new(auth['CONSUMER_KEY'], auth['CONSUMER_SECRET'], :site => 'https://api.twitter.com')
+		token = oauth.get_request_token
+
+		puts "Now, go to this url and enter the PIN provided. "
+		puts token.authorize_url.strip + " > "
+		pin = STDIN.readline.chomp
+
+		pinned_token = token.get_access_token(:oauth_verifier => pin.chomp)
+		auth['ACCESS_KEY'] = pinned_token.token
+		auth['ACCESS_SECRET'] = pinned_token.secret
+		File.open(oauth_path, 'w') { |f| f.write(auth.to_json) }
+	end
 end
 
 saved_bot.access_key = auth['ACCESS_KEY']

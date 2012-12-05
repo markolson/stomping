@@ -16,11 +16,13 @@ class Stomping::Bot
     end
 
     def run
+        p "Starting run - last one was at #{Time.parse(self.class.last_ran.to_s)}" if self.class.last_ran
     	actions.each {|x|
-    		if x.should_run?(Time.now-1)
+    		if x.should_run?((self.class.last_ran || Time.now), x)
     			x.run
     		end	
     	}
+        self.class.ran!
     end
 
     def settings; self.class.settings; end
@@ -40,10 +42,12 @@ class Stomping::Bot
 	    def get_mentions
 	    	request('mentions') do
 	    		@mentions = client.mentions_timeline
-	    		@mentions.select {|tweet|
-	     			last_updated.nil? || DateTime.parse(tweet.created_at.to_s)  > last_updated - 60*60*24
-	    		}.map {|t| p t['text'] }
-	    		update!
+                update!
+	    		m = @mentions.select {|tweet|
+	     			last_updated.nil? || DateTime.parse(tweet.created_at.to_s)  > last_updated
+	    		}.each {|t|
+                    self.run_action(t)
+                }
 	    	end
 	    end
 
@@ -63,7 +67,7 @@ class Stomping::Bot
 	          obj = klass.new(bot_config, auth)
 	          if live
 	          	c = Stomping::DB::Client.find(:path => root_bot_path.to_s)
-	          	obj.class.model = Stomping::DB::Bot.where(:client => c).where(:name => obj.settings.title).first
+	          	obj.class.model = Stomping::DB::Bot.where(:client_id => c.id).where(:name => obj.settings.title).first
 	          end
 	          @bots << obj
 	        }
@@ -76,13 +80,22 @@ class Stomping::Bot
     	end
 
     	def update!
-    		"UPDATING LAST RUN TIME TO #{Time.now}"
+    		p "UPDATING LAST API TIME TO #{Time.now}"
     		model.update(:last_updated => Time.now).save
     	end
+
+        def ran!
+            p "UPDATING LAST RUN TIME TO #{Time.now}"
+            model.update(:last_ran => Time.now).save
+        end
 
     	def last_updated
     		model.last_updated
     	end
+
+        def last_ran
+            model.last_ran
+        end
 
     	def scheduled(&block); @trigger = block; end
     	def mentioned(&block); @trigger = block; end
